@@ -1,4 +1,4 @@
-package com.h2rd.refactoring.usermanagement;
+package com.h2rd.refactoring.domain;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
@@ -6,9 +6,18 @@ import java.util.List;
 @XmlRootElement
 public class User {
 
-    String name;
-    String email;
-    List<String> roles;
+    private String name;
+    private String email;
+    private List<String> roles;
+
+    public User() {
+    }
+
+    public User(String name, String email, List<String> roles) {
+        this.name = name;
+        this.email = email;
+        this.roles = roles;
+    }
 
     public String getName() {
         return name;

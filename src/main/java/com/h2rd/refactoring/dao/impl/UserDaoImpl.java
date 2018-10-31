@@ -1,18 +1,24 @@
-package com.h2rd.refactoring.usermanagement;
+package com.h2rd.refactoring.dao.impl;
+
+import com.h2rd.refactoring.dao.UserDao;
+import com.h2rd.refactoring.domain.User;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
-public class UserDao {
+@Repository
+public class UserDaoImpl implements UserDao {
 
-    public ArrayList<User> users;
+    private ArrayList<User> users;
 
-    public static UserDao userDao;
+    private static UserDaoImpl userDaoImpl;
 
-    public static UserDao getUserDao() {
-        if (userDao == null) {
-            userDao = new UserDao();
+    public static UserDaoImpl getUserDaoImpl() {
+        if (userDaoImpl == null) {
+            userDaoImpl = new UserDaoImpl();
         }
-        return userDao;
+        return userDaoImpl;
     }
 
     public void saveUser(User user) {
@@ -34,11 +40,13 @@ public class UserDao {
     public void deleteUser(User userToDelete) {
         try {
             for (User user : users) {
-                if (user.getName() == userToDelete.getName()) {
+                if (user.getName().equals(userToDelete.getName())) {
                     users.remove(user);
                 }
             }
-        } catch (Exception e) {
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -46,7 +54,7 @@ public class UserDao {
     public void updateUser(User userToUpdate) {
         try {
             for (User user : users) {
-                if (user.getName() == userToUpdate.getName()) {
+                if (user.getName().equals(userToUpdate.getName())) {
                     user.setEmail(userToUpdate.getEmail());
                     user.setRoles(userToUpdate.getRoles());
                 }
@@ -59,7 +67,7 @@ public class UserDao {
     public User findUser(String name) {
         try {
             for (User user : users) {
-                if (user.getName() == name) {
+                if (user.getName().equals(name)) {
                     return user;
                 }
             }
